@@ -1,0 +1,4 @@
+# This file exists only to keep the assets/icons/ directory tracked by Git.
+# Git ignores empty directories, so without this file the folder would not
+# be committed and would be missing from the Netlify deployment.
+# Place any SVG or PNG icon files in this directory.

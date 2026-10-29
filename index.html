@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="StudyMate – Your personal student study planner to manage tasks, track progress, and stay on top of your studies." />
+  <title>StudyMate – Student Study Planner</title>
+
+  <!-- Google Fonts: loaded via <link> (not @import) for CSP compatibility on Netlify -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===== MOBILE TOP BAR ===== -->
+  <header class="mobile-topbar" role="banner">
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="sidebar">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <rect y="3"  width="22" height="2.5" rx="1.25" fill="currentColor"/>
+        <rect y="10" width="22" height="2.5" rx="1.25" fill="currentColor"/>
+        <rect y="17" width="22" height="2.5" rx="1.25" fill="currentColor"/>
+      </svg>
+    </button>
+    <span class="mobile-brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect width="24" height="24" rx="6" fill="#7c6fcd"/>
+        <path d="M6 8h12M6 12h8M6 16h10" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      StudyMate
+    </span>
+    <button class="mobile-add-btn" id="mobileAddBtn" aria-label="Add new task">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <circle cx="10" cy="10" r="10" fill="#7c6fcd"/>
+        <path d="M10 5v10M5 10h10" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- ===== OVERLAY (mobile sidebar) ===== -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <!-- ===== APP WRAPPER ===== -->
+  <div class="app-wrapper">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <rect width="32" height="32" rx="9" fill="#7c6fcd"/>
+              <path d="M8 10h16M8 16h10M8 22h13" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="brand-name">StudyMate</h1>
+            <p class="brand-tagline">Study Planner</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Sidebar navigation">
+        <ul role="list">
+          <li>
+            <button class="nav-btn active" id="navDashboard" data-page="dashboard" aria-current="page">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <rect x="1" y="1" width="7" height="7" rx="2" fill="currentColor" opacity=".9"/>
+                <rect x="12" y="1" width="7" height="7" rx="2" fill="currentColor" opacity=".6"/>
+                <rect x="1" y="12" width="7" height="7" rx="2" fill="currentColor" opacity=".6"/>
+                <rect x="12" y="12" width="7" height="7" rx="2" fill="currentColor" opacity=".4"/>
+              </svg>
+              Dashboard
+            </button>
+          </li>
+          <li>
+            <button class="nav-btn" id="navTasks" data-page="tasks">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M4 5h12M4 10h12M4 15h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              My Tasks
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-actions">
+        <button class="btn btn-primary sidebar-add-btn" id="sidebarAddBtn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Add New Task
+        </button>
+        <button class="btn btn-ghost clear-btn" id="clearCompletedBtn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 4h10M6 4V3h4v1M5 4l.5 9h5L11 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Clear Completed
+        </button>
+      </div>
+
+      <div class="sidebar-footer">
+        <p class="footer-quote" id="motivationalQuote">Keep going! You've got this! 💪</p>
+      </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content" role="main">
+
+      <!-- ===== DASHBOARD PAGE ===== -->
+      <section class="page active" id="pageDashboard" aria-labelledby="dashHeading">
+
+        <div class="page-header">
+          <div>
+            <h2 class="page-title" id="dashHeading">Welcome to StudyMate</h2>
+            <p class="page-subtitle" id="todayDate"></p>
+          </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid" role="region" aria-label="Task statistics">
+          <div class="stat-card stat-total">
+            <div class="stat-icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <rect x="3" y="5" width="22" height="18" rx="3" stroke="currentColor" stroke-width="2"/>
+                <path d="M8 10h12M8 14h12M8 18h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Total Tasks</span>
+              <span class="stat-value" id="statTotal">0</span>
+            </div>
+          </div>
+          <div class="stat-card stat-pending">
+            <div class="stat-icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <circle cx="14" cy="14" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M14 8v6l4 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Pending</span>
+              <span class="stat-value" id="statPending">0</span>
+            </div>
+          </div>
+          <div class="stat-card stat-completed">
+            <div class="stat-icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <circle cx="14" cy="14" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M9 14l3.5 3.5L19 10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Completed</span>
+              <span class="stat-value" id="statCompleted">0</span>
+            </div>
+          </div>
+          <div class="stat-card stat-progress">
+            <div class="stat-icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                <path d="M4 20 Q14 4 24 10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                <circle cx="24" cy="10" r="3" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Completion</span>
+              <span class="stat-value" id="statPercent">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-section" role="region" aria-label="Overall progress">
+          <div class="progress-header">
+            <span class="progress-label">Overall Progress</span>
+            <span class="progress-value" id="progressValue">0%</span>
+          </div>
+          <div class="progress-bar-wrap" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Task completion progress" id="progressBarWrap">
+            <div class="progress-bar-fill" id="progressBarFill"></div>
+          </div>
+        </div>
+
+        <!-- Today's Tasks -->
+        <div class="today-section" role="region" aria-label="Today's tasks">
+          <h3 class="section-title">Today's Study Tasks</h3>
+          <div class="today-tasks-list" id="todayTasksList">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Motivational Message (shown when all done) -->
+        <div class="all-done-message hidden" id="allDoneMessage" role="status" aria-live="polite">
+          <div class="all-done-icon" aria-hidden="true">🎉</div>
+          <h3>All Tasks Completed!</h3>
+          <p>Amazing work! You've finished everything. Take a well-deserved break!</p>
+        </div>
+
+      </section>
+
+      <!-- ===== TASKS PAGE ===== -->
+      <section class="page" id="pageTasks" aria-labelledby="tasksHeading">
+
+        <div class="page-header">
+          <div>
+            <h2 class="page-title" id="tasksHeading">My Tasks</h2>
+            <p class="page-subtitle">Manage and track your study tasks</p>
+          </div>
+          <button class="btn btn-primary" id="tasksPageAddBtn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Add Task
+          </button>
+        </div>
+
+        <!-- Search, Filter, Sort Bar -->
+        <div class="task-controls" role="search">
+          <div class="search-wrap">
+            <label for="searchInput" class="sr-only">Search tasks</label>
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M13 13l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <input type="search" id="searchInput" class="search-input" placeholder="Search by title or subject…" autocomplete="off" />
+          </div>
+          <div class="control-group">
+            <label for="filterSelect" class="sr-only">Filter tasks</label>
+            <select id="filterSelect" class="control-select">
+              <option value="all">All Tasks</option>
+              <option value="pending">Pending</option>
+              <option value="completed">Completed</option>
+            </select>
+            <label for="sortSelect" class="sr-only">Sort tasks</label>
+            <select id="sortSelect" class="control-select">
+              <option value="due">Sort by Due Date</option>
+              <option value="priority">Sort by Priority</option>
+              <option value="created">Sort by Created</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs" role="tablist" aria-label="Filter tasks">
+          <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true" id="tabAll">All</button>
+          <button class="filter-tab" data-filter="pending" role="tab" aria-selected="false" id="tabPending">Pending</button>
+          <button class="filter-tab" data-filter="completed" role="tab" aria-selected="false" id="tabCompleted">Completed</button>
+        </div>
+
+        <!-- Task List -->
+        <div class="task-list" id="taskList" role="list" aria-live="polite" aria-label="Tasks list">
+          <!-- Populated by JS -->
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===== ADD / EDIT TASK MODAL ===== -->
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" role="document">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Add New Task</h2>
+        <button class="modal-close" id="modalClose" aria-label="Close dialog">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M2 2l14 14M16 2L2 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <form id="taskForm" novalidate autocomplete="off">
+        <!-- Task Title -->
+        <div class="form-group">
+          <label for="taskTitle" class="form-label">Task Title <span class="required" aria-hidden="true">*</span></label>
+          <input type="text" id="taskTitle" class="form-input" placeholder="e.g. Complete Chapter 3 notes" maxlength="120" required />
+          <span class="form-error" id="titleError" role="alert" aria-live="assertive"></span>
+        </div>
+
+        <!-- Subject -->
+        <div class="form-group">
+          <label for="taskSubject" class="form-label">Subject <span class="required" aria-hidden="true">*</span></label>
+          <div class="subject-input-wrap">
+            <select id="taskSubjectSelect" class="form-input" aria-label="Select a subject or choose custom">
+              <option value="">-- Select Subject --</option>
+              <option value="Python">Python</option>
+              <option value="Java">Java</option>
+              <option value="Database">Database</option>
+              <option value="Web Development">Web Development</option>
+              <option value="Mathematics">Mathematics</option>
+              <option value="custom">+ Enter Custom Subject</option>
+            </select>
+            <input type="text" id="taskSubject" class="form-input hidden" placeholder="Enter subject name…" maxlength="60" aria-label="Custom subject name"/>
+          </div>
+          <span class="form-error" id="subjectError" role="alert" aria-live="assertive"></span>
+        </div>
+
+        <!-- Due Date -->
+        <div class="form-group">
+          <label for="taskDueDate" class="form-label">Due Date <span class="required" aria-hidden="true">*</span></label>
+          <input type="date" id="taskDueDate" class="form-input" required />
+          <span class="form-error" id="dateError" role="alert" aria-live="assertive"></span>
+        </div>
+
+        <!-- Priority -->
+        <div class="form-group">
+          <label class="form-label">Priority <span class="required" aria-hidden="true">*</span></label>
+          <div class="priority-group" role="radiogroup" aria-label="Task priority">
+            <label class="priority-option priority-low">
+              <input type="radio" name="priority" value="low" id="prioLow" />
+              <span class="priority-label">Low</span>
+            </label>
+            <label class="priority-option priority-medium">
+              <input type="radio" name="priority" value="medium" id="prioMedium" checked />
+              <span class="priority-label">Medium</span>
+            </label>
+            <label class="priority-option priority-high">
+              <input type="radio" name="priority" value="high" id="prioHigh" />
+              <span class="priority-label">High</span>
+            </label>
+          </div>
+          <span class="form-error" id="priorityError" role="alert" aria-live="assertive"></span>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="taskDescription" class="form-label">Description <span class="optional">(optional)</span></label>
+          <textarea id="taskDescription" class="form-input form-textarea" placeholder="Add notes or details about this task…" maxlength="300" rows="3"></textarea>
+        </div>
+
+        <input type="hidden" id="taskId" value="" />
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" id="cancelModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveTaskBtn">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== DELETE CONFIRMATION DIALOG ===== -->
+  <div class="modal-backdrop" id="deleteBackdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2 class="modal-title" id="deleteTitle">Delete Task</h2>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete <strong id="deleteTaskName"></strong>? This action cannot be undone.</p>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" id="cancelDeleteBtn">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Delete Task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== NOTIFICATION TOAST ===== -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
